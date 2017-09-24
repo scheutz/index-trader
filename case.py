@@ -7,8 +7,8 @@ index in order to get the highest return. Only one buy and one sell transaction 
 Should work in O(n)"
 
 Output:
-Buy at 1247 (date: 20160628)
-Sell at 1468.16 (date: 20161011)
+Buy at 1240.68 (date: 20160627)
+Buy at 1468.16 (date: 20161011)
 """
 
 import json
@@ -45,7 +45,7 @@ def get_optimal_interval(price_history):
         for day in price_history:
 
             # First, we continuously keep track of the lowest price point we have seen so far
-            if buy['open'] > day['low']:
+            if buy['low'] > day['low']:
                 buy = day
 
             # Second, evaluate if the period [buy, current_day_in_loop] is the most attractive investment
