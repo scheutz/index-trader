@@ -15,7 +15,6 @@ import json
 import requests
 
 
-
 def load_price_history_data(url="http://www.modularfinance.se/api/puzzles/index-trader.json"):
     """
     Loads price history data from the puzzle API and returns it as a list of dict
@@ -36,13 +35,12 @@ def get_optimal_interval(price_history):
     if len(price_history) == 0:
         raise ValueError('Empty dataset')
 
-    elif len(price_history) == 1:  # trivial case
-        return {'buy': price_history[0], 'sell': price_history[0]}
+    elif len(price_history) == 1:  # trivial case (i.e. buy at the only day's low and sell at its high)
+        buy = sell = price_history[0]
 
     else:
-        buy = price_history[0]
-        sell = price_history[0]
-        difference = 0  # the difference between sell and buy price.
+        buy = sell = price_history[0]
+        difference = 0  # the difference between sell and buy price
 
         for day in price_history:
 
@@ -51,14 +49,12 @@ def get_optimal_interval(price_history):
                 buy = day
 
             # Second, evaluate if the period [buy, current_day_in_loop] is the most attractive investment
-            # we have seen so far
             if day['high'] - buy['low'] > difference:
                 difference = day['high'] - buy['low']
                 sell = day
 
-        return {'buy': {'date': buy['quote_date'], 'price': buy['low']},
-                'sell': {'date': sell['quote_date'], 'price': sell['high']}
-                }
+    return {'buy': {'date': buy['quote_date'], 'price': buy['low']},
+            'sell': {'date': sell['quote_date'], 'price': sell['high']}}
 
 
 if __name__ == "__main__":
